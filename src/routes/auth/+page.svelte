@@ -4,7 +4,7 @@
     import { login } from "../../stores/login"
 </script>
 
-<div class="w-full h-screen pt-[90px] flex justify-center items-center">
+<div class="w-full h-screen flex justify-center items-center">
     {#if $login}
         <Login />
     {:else}
