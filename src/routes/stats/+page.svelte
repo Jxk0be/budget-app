@@ -1,0 +1,3 @@
+<div>
+    stats page
+</div>
