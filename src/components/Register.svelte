@@ -5,6 +5,15 @@
     let email = ""
     let password = ""
     let confirmPassword = ""
+    let error = false
+
+    function handleAuthentication() {
+        if (!email || !password || !confirmPassword || password !== confirmPassword) {
+            error = true
+            return
+        }
+        else error = false
+    }
 
     /* We want this to default to the login page if route switches */
     onDestroy(() => {
@@ -15,6 +24,9 @@
 <div class="w-full md:h-[700px] h-full flex justify-center flex-col items-center">
     <form class="flex flex-col gap-[8px] max-w-[500px] w-full justify-center items-center">
         <h1 class="font-bold text-[35px]">Register</h1>
+        {#if error}
+            <p class="text-red-500">The info you entered is not correct</p>
+        {/if}
         <label>
             <p class={`${email ? 'above' : 'center'} duration-150 transition-all ease-in-out`}>Email</p>
             <input bind:value={email} type="email" placeholder="Email" />
@@ -27,7 +39,7 @@
             <p class={`${confirmPassword ? 'above' : 'center'} duration-150 transition-all ease-in-out`}>Confrim Password</p>
             <input bind:value={confirmPassword} type="password" placeholder="Confirm Password" />
         </label>
-        <button class="w-full text-[1rem] rounded-lg p-[14px] text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 transition-all padding-[14px]" type="button">Submit</button>
+        <button type="submit" on:click={handleAuthentication} class="w-full text-[1rem] rounded-lg p-[14px] text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 transition-all padding-[14px]">Submit</button>
     </form>
     <button class="mt-[10px]" on:click={() => $login = true}>Already have an account?</button>
 </div>
