@@ -16,10 +16,6 @@
             <p class={`${password ? 'above' : 'center'} duration-150 transition-all ease-in-out`}>Password</p>
             <input bind:value={password} type="password" placeholder="Password" />
         </label>
-        <label>
-            <p class={`${confirmPassword ? 'above' : 'center'} duration-150 transition-all ease-in-out`}>Confrim Password</p>
-            <input bind:value={confirmPassword} type="password" placeholder="Confirm Password" />
-        </label>
         <button class="w-full text-[1rem] rounded-lg p-[14px] text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 transition-all padding-[14px]" type="button">Submit</button>
     </form>
     <button class="mt-[10px]" on:click={() => $login = false}>Don't have an account?</button>
