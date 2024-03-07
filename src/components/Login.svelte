@@ -2,12 +2,23 @@
     import { login } from "../stores/login"
     let email = ""
     let password = ""
-    let confirmPassword = ""
+    let error = false
+
+    function handleAuthentication() {
+        if (!email || !password) {
+            error = true
+            return
+        }
+        else error = false
+    }
 </script>
 
 <div class="w-full md:h-[700px] h-full flex justify-center flex-col items-center">
     <form class="flex flex-col gap-[8px] max-w-[500px] w-full justify-center items-center">
         <h1 class="font-bold text-[35px]">Login</h1>
+        {#if error}
+            <p class="text-red-500">The info you entered is not correct</p>
+        {/if}
         <label>
             <p class={`${email ? 'above' : 'center'} duration-150 transition-all ease-in-out`}>Email</p>
             <input bind:value={email} type="email" placeholder="Email" />
@@ -16,7 +27,7 @@
             <p class={`${password ? 'above' : 'center'} duration-150 transition-all ease-in-out`}>Password</p>
             <input bind:value={password} type="password" placeholder="Password" />
         </label>
-        <button class="w-full text-[1rem] rounded-lg p-[14px] text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 transition-all padding-[14px]" type="button">Submit</button>
+        <button type="submit" on:click={handleAuthentication} class="w-full text-[1rem] rounded-lg p-[14px] text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 transition-all padding-[14px]">Submit</button>
     </form>
     <button class="mt-[10px]" on:click={() => $login = false}>Don't have an account?</button>
 </div>
