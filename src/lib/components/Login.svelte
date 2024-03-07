@@ -1,5 +1,5 @@
 <script>
-    import { login } from "../stores/login"
+    import { login } from "../../stores/login"
     let email = ""
     let password = ""
     let error = false

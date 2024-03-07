@@ -1,5 +1,5 @@
 <script>
-    import { login } from "../stores/login"
+    import { login } from "../../stores/login"
     import { onDestroy } from "svelte";
 
     let email = ""
@@ -39,7 +39,7 @@
             <p class={`${confirmPassword ? 'above' : 'center'} duration-150 transition-all ease-in-out`}>Confrim Password</p>
             <input bind:value={confirmPassword} type="password" placeholder="Confirm Password" />
         </label>
-        <button type="submit" on:click={handleAuthentication} class="w-full text-[1rem] rounded-lg p-[14px] text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 transition-all padding-[14px]">Submit</button>
+        <button type="submit" on:click={handleAuthentication} class="w-full text-[1rem] rounded-lg p-[14px] text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 transition-all">Submit</button>
     </form>
     <button class="mt-[10px]" on:click={() => $login = true}>Already have an account?</button>
 </div>

@@ -42,7 +42,7 @@
 </div>
 
 {#if menuOpen}
-    <button class={`${menuOpen ? 'left-0' : 'left-[-100%]'} lg:hidden overflow-x-hidden overflow-y-hidden w-full cursor-auto h-screen fixed top-0 left-0 bg-gray-900/50`} on:click={() => handleMenu()}></button>
+    <button class={`${menuOpen ? 'left-0' : 'left-[-100%]'} lg:hidden z-20 overflow-x-hidden overflow-y-hidden w-full cursor-auto h-screen fixed top-0 left-0 bg-gray-900/50`} on:click={() => handleMenu()}></button>
 {/if}
 
 <div class={`transition-all z-30 text-[125%] uppercase bg-[#0b0b0b] font-semibold min-w-[250px] text-white lg:hidden ease-in-out duration-150 ${menuOpen ? 'right-0' : 'md:right-[-40%] right-[-250px]'} fixed pt-[90px] w-[250px] top-0 md:w-[40%] h-full border-l border-gray-600`}>
