@@ -1,15 +1,20 @@
 <script>
     import { login } from "../../stores/login"
+    import { authStore, authHandlers } from "../../stores/auth"
+    import { auth } from "$lib/firebase/firebase";
+
     let email = ""
     let password = ""
     let error = false
 
-    function handleAuthentication() {
+    async function handleAuthentication() {
         if (!email || !password) {
             error = true
             return
         }
         else error = false
+
+        await authHandlers.login(email, password)
     }
 </script>
 

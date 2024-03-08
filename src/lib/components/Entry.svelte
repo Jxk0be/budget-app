@@ -2,6 +2,7 @@
     let selection = "expense"
     let currency = "usd"
     let category = "transportation"
+    let type = "paycheck"
 </script>
 
 <div class="w-full md:h-[700px] mt-[-90px] md:mt-0 h-full flex justify-center flex-col items-center">
@@ -67,9 +68,33 @@
                 </button>
             </div>
         {:else}
-            <div>
-                Income stuff
+        <div class="flex flex-col w-full justify-center items-center">
+            <h1 class="pb-2 font-semibold text-xl">Type</h1>
+            <div class="w-full flex justify-around items-center h-[60px] ">
+                <div class="w-full h-full grid grid-cols-2 min-w-[300px]">
+                    <button on:click={() => type = "paycheck"}>
+                        <div class={`${type === "paycheck" ? 'underline text-blue-700' : ''} w-full h-full border rounded-xl flex justify-center items-center`}>
+                            Paycheck
+                        </div>
+                    </button>
+                    <button on:click={() => type = "random"}>
+                        <div class={`${type === "random" ? 'underline text-blue-700' : ''} w-full h-full border rounded-xl flex justify-center items-center`}>
+                            Random
+                        </div>
+                    </button>
+                </div>
             </div>
+
+            <h1 class="pb-2 pt-2 font-semibold text-xl">Amount</h1>
+            <div class="w-full gap-x-1 flex justify-center items-center h-[75px] ">
+                <div class="w-full font-semibold text-xl h-full bg-white flex justify-center items-center">
+                    <input class="w-full p-4" type="text" placeholder={`${currency === 'usd' ? '$23.00...' : '¥2300...'}`} />
+                </div>
+            </div>
+            <button class="w-full mt-[20px] font-semibold text-xl p-[14px] bg-white flex justify-center items-center">
+                Add Income
+            </button>
+        </div>
         {/if}
     </form>
 </div>

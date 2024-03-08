@@ -1,18 +1,22 @@
 <script>
     import { login } from "../../stores/login"
     import { onDestroy } from "svelte";
+    import { authStore, authHandlers } from "../../stores/auth"
+    import { auth } from "$lib/firebase/firebase";
 
     let email = ""
     let password = ""
     let confirmPassword = ""
     let error = false
 
-    function handleAuthentication() {
+    async function handleAuthentication() {
         if (!email || !password || !confirmPassword || password !== confirmPassword) {
             error = true
             return
         }
         else error = false
+        
+        await authHandlers.signUp(email, password)
     }
 
     /* We want this to default to the login page if route switches */

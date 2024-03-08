@@ -1,7 +1,18 @@
 <script>
     import Login from "$lib/components/Login.svelte";
     import Register from "$lib/components/Register.svelte";
+    import { onAuthStateChanged } from "firebase/auth";
     import { login } from "../../stores/login"
+    import { onMount } from 'svelte';
+    import { auth } from "$lib/firebase/firebase";
+
+    onMount(() => {
+        const listen = onAuthStateChanged(auth, (user) => {
+            if (user) console.log("Signed in baby")
+        })
+
+        return () => listen()
+    })
 </script>
 
 <div class="w-full h-screen flex justify-center items-center">
