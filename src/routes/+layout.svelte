@@ -1,7 +1,7 @@
 <script>
     import "../app.css";
     import Navbar from "$lib/components/Navbar.svelte";
-    import { authStatus } from "../stores/auth"
+    import { authStatus, userInstance } from "../stores/auth"
     import { onMount } from "svelte";
     import { auth, db } from "$lib/firebase/firebase";
     import { onAuthStateChanged } from "firebase/auth";
@@ -13,30 +13,43 @@
                 $authStatus = true
                 const docRef = doc(db, "users", user.uid)
                 const docSnap = await getDoc(docRef)
+                let userData = {
+                    email: user.email,
+                    expenses: [],
+                    incomes: []
+                }
+
                 if (!docSnap.exists()) {
                     const userRef = doc(db, "users", user.uid)
                     await setDoc(
                         userRef,
-                        {
-                            email: user.email,
-                            expenses: [],
-                            incomes: []
-                        },
+                        userData,
                         { merge: true }
                     )
+
+                    $userInstance = {
+                        user: user,
+                        data: userData
+                    }
                 }
                 else {
                     const userData = docSnap.data()
-                    console.log(userData)
+                    $userInstance = {
+                        user: user,
+                        data: userData
+                    }
                 }
             }
             else {
                 $authStatus = false
+                $userInstance = {}
             }
         })
 
         return () => listen()
     })
+
+    $: console.log($userInstance)
 </script>
 
 <Navbar />

@@ -4,6 +4,11 @@ import { writable } from 'svelte/store';
 
 export const authStatus = writable(false)
 
+export const userInstance = writable({
+    user: null,
+    data: null
+})
+
 export const authHandlers = {
     signUp: async (email, pass) => {
         await createUserWithEmailAndPassword(auth, email, pass)
