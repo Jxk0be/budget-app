@@ -65,7 +65,6 @@
         <h1 class="font-bold text-[35px]">Register</h1>
         {#if error}
             <p class="text-red-500">Make sure all fields are filled out</p>
-            
         {/if}
 
         {#if notMatch}
