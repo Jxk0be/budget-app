@@ -42,14 +42,15 @@
             }
             else {
                 $authStatus = false
-                $userInstance = {}
+                $userInstance = {
+                    user: null,
+                    data: null
+                }
             }
         })
 
         return () => listen()
     })
-
-    $: console.log($userInstance)
 </script>
 
 <Navbar />

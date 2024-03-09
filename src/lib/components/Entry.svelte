@@ -1,4 +1,8 @@
 <script>
+    import { authStatus, userInstance } from "../../stores/auth"
+    import { auth, db } from "$lib/firebase/firebase";
+    import { doc, getDoc, setDoc } from "firebase/firestore";
+
     let selection = "expense"
     let currency = "usd"
     let category = "transportation"
@@ -8,7 +12,35 @@
     let desc = ""
 
     const handleExpense = async () => {
-        console.log("Handle expense")
+        let expenseData = {
+            currency: currency,
+            category: category,
+            amount: amount,
+            description: desc
+        }
+
+        try {
+            const userRef = doc(db, "users", $userInstance?.user?.uid)
+            const docSnap = await getDoc(userRef)
+            const userData = docSnap.data()
+            let expenses = userData?.expenses || []
+            await setDoc(
+                userRef,
+                {
+                    expenses: [...expenses, expenseData]
+                },
+                { merge: true }
+            )
+        }
+        catch(error) {
+            console.log(error)
+        }
+        
+        amount = ""
+        desc = ""
+        selection = "expense"
+        currency = "usd"
+        category = "transportation"
     }
 
     const handleIncome = async () => {
