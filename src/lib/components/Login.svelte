@@ -8,6 +8,7 @@
     let password = ""
     let error = false
 
+
     async function handleAuthentication() {
         if (!email || !password) {
             error = true
@@ -21,7 +22,8 @@
             goto("/")
         }
         catch(error) {
-            console.log(error)
+            error = true
+            return
         }
     }
 

@@ -4,7 +4,8 @@
     import { auth } from "$lib/firebase/firebase";
 
     let menuOpen = false;
-
+    let logoutStatus = false
+    
     const handleClose = () => {
         menuOpen = false
         if (document.body.classList.contains("noScroll")) {
@@ -28,6 +29,13 @@
         try {
             await authHandlers.logout()
             $authStatus = false
+            logoutStatus = true
+
+            const timer = setTimeout(() => {
+                logoutStatus = false
+            }, 3000)
+
+            return () => clearTimeout(timer);
         }
         catch(error) {
             console.log(error)
@@ -84,4 +92,10 @@
         {/if}
 
     </ul>
+</div>
+
+<div class={`${logoutStatus ? 'top-0 mt-[95px]' : 'top-[-300px] mt-0'} w-full h-auto duration-500 flex justify-center items-center absolute z-30 ease-in-out transition-all`}>
+    <div class="rounded-lg drop-shadow-xl flex justify-center items-center font-bold text-xl text-white  bg-[#ff5c3f] h-[75px] m-auto w-[350px]">
+        You have successfully logged out!
+    </div>
 </div>
