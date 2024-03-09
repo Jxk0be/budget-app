@@ -7,14 +7,28 @@
     let email = ""
     let password = ""
     let error = false
-
+    let passLengthError = false
+    let firebaseError = ""
+    let firebaseErrorStatus = false
 
     async function handleAuthentication() {
         if (!email || !password) {
             error = true
+            passLengthError = false
+            firebaseErrorStatus = false
             return
         }
-        else error = false
+        else if (password.length < 6) {
+            passLengthError = true
+            error = false
+            firebaseErrorStatus = false
+            return
+        }
+        else {
+            error = false
+            passLengthError = false
+            firebaseErrorStatus = false
+        }
 
         try {
             await authHandlers.login(email, password)
@@ -22,8 +36,9 @@
             goto("/")
         }
         catch(error) {
-            error = true
-            return
+            firebaseErrorStatus = true
+            firebaseError = error
+            console.log(error)
         }
     }
 
@@ -44,6 +59,14 @@
         <h1 class="font-bold text-[35px]">Login</h1>
         {#if error}
             <p class="text-red-500">The info you entered is not correct</p>
+        {/if}
+
+        {#if passLengthError}
+            <p class="text-red-500">Password must be at least 6 characters</p>        
+        {/if}
+
+        {#if firebaseErrorStatus}
+            <p class="text-red-500">{firebaseError}</p>
         {/if}
         <label>
             <p class={`${email ? 'above' : 'center'} duration-150 transition-all ease-in-out`}>Email</p>

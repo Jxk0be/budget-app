@@ -8,20 +8,48 @@
     let password = ""
     let confirmPassword = ""
     let error = false
+    let notMatch = false
+    let passLengthError = false
+    let firebaseError = ""
+    let firebaseErrorStatus = false
 
     async function handleAuthentication() {
-        if (!email || !password || !confirmPassword || password !== confirmPassword) {
+        if (!email || !password || !confirmPassword) {
             error = true
+            notMatch = false
+            passLengthError = false
+            firebaseErrorStatus = false
             return
         }
-        else error = false
-        
+        else if (password !== confirmPassword) {
+            notMatch = true
+            error = false
+            passLengthError = false
+            firebaseErrorStatus = false
+            return
+        }
+        else if (password.length < 6) {
+            passLengthError = true
+            notMatch = false
+            error = false
+            firebaseErrorStatus = false
+            return
+        }
+        else {
+            error = false
+            notMatch = false
+            passLengthError = false
+            firebaseErrorStatus = false
+        }
+
         try {
             await authHandlers.signUp(email, password)
             $authStatus = true
             goto("/")
         }
         catch(error) {
+            firebaseErrorStatus = true
+            firebaseError = error
             console.log(error)
         }
     }
@@ -36,7 +64,20 @@
     <form class="flex flex-col gap-[8px] max-w-[500px] w-full justify-center items-center">
         <h1 class="font-bold text-[35px]">Register</h1>
         {#if error}
-            <p class="text-red-500">The info you entered is not correct</p>
+            <p class="text-red-500">Make sure all fields are filled out</p>
+            
+        {/if}
+
+        {#if notMatch}
+            <p class="text-red-500">Passwords do not match</p>
+        {/if}
+
+        {#if passLengthError}
+            <p class="text-red-500">Password must be at least 6 characters</p>
+        {/if}
+
+        {#if firebaseErrorStatus}
+            <p class="text-red-500">{firebaseError}</p>
         {/if}
         <label>
             <p class={`${email ? 'above' : 'center'} duration-150 transition-all ease-in-out`}>Email</p>
