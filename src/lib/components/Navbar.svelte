@@ -76,9 +76,7 @@
         </a>
 
         {#if $authStatus}
-            <button on:click={() => handleLogout()}>
-                <li class="p-5 border-b border-gray-600 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Logout</li>
-            </button>
+            <button on:click={() => handleLogout()} class="p-5 w-full text-left uppercase border-b border-gray-600 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Logout</button>
         {:else}
             <a href="auth" on:click={() => handleClose()}>
                 <li class="p-5 border-b border-gray-600 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Login</li>
