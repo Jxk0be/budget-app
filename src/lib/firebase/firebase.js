@@ -2,7 +2,7 @@
 
 import { getApp, deleteApp, getApps, initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
 // TODO: Add SDKs for Firebase products that you want to use
 
@@ -41,3 +41,4 @@ else {
 
 export const db = getFirestore(firebaseApp)
 export const auth = getAuth(firebaseApp)
+export const googleProvider = new GoogleAuthProvider();

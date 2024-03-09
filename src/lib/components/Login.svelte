@@ -2,6 +2,7 @@
     import { login } from "../../stores/login"
     import { authStatus, authHandlers } from "../../stores/auth"
     import { goto } from "$app/navigation"
+    import Icon from '@iconify/svelte';
 
     let email = ""
     let password = ""
@@ -16,6 +17,17 @@
 
         try {
             await authHandlers.login(email, password)
+            $authStatus = true
+            goto("/")
+        }
+        catch(error) {
+            console.log(error)
+        }
+    }
+
+    async function handleGoogle() {
+        try {
+            await authHandlers.google()
             $authStatus = true
             goto("/")
         }
@@ -39,7 +51,10 @@
             <p class={`${password ? 'above' : 'center'} duration-150 transition-all ease-in-out`}>Password</p>
             <input bind:value={password} type="password" placeholder="Password" />
         </label>
-        <button type="submit" on:click={handleAuthentication} class="w-full text-[1rem] rounded-lg p-[14px] text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 transition-all padding-[14px]">Submit</button>
+        <button type="submit" on:click={handleAuthentication} class="w-full text-[1rem] rounded-md p-[14px] text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 transition-all">Submit</button>
+        <button on:click={handleGoogle} class="bg-[#efefef] p-[14px] w-full text-[1rem] duration-150 font-semibold hover:bg-blue-300 hover:text-white flex justify-center items-center rounded-md">
+            <Icon class="mr-3 text-[35px]" icon="flat-color-icons:google" />Sign in with Google
+        </button>
     </form>
     <button class="mt-[10px]" on:click={() => $login = false}>Don't have an account?</button>
 </div>
