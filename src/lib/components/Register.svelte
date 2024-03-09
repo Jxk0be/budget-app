@@ -1,8 +1,8 @@
 <script>
     import { login } from "../../stores/login"
     import { onDestroy } from "svelte";
-    import { authStore, authHandlers } from "../../stores/auth"
-    import { auth } from "$lib/firebase/firebase";
+    import { authStatus, authHandlers } from "../../stores/auth"
+    import { goto } from "$app/navigation"
 
     let email = ""
     let password = ""
@@ -16,7 +16,14 @@
         }
         else error = false
         
-        await authHandlers.signUp(email, password)
+        try {
+            await authHandlers.signUp(email, password)
+            $authStatus = true
+            goto("/")
+        }
+        catch(error) {
+            console.log(error)
+        }
     }
 
     /* We want this to default to the login page if route switches */

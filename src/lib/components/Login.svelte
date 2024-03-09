@@ -1,7 +1,7 @@
 <script>
     import { login } from "../../stores/login"
-    import { authStore, authHandlers } from "../../stores/auth"
-    import { auth } from "$lib/firebase/firebase";
+    import { authStatus, authHandlers } from "../../stores/auth"
+    import { goto } from "$app/navigation"
 
     let email = ""
     let password = ""
@@ -14,7 +14,14 @@
         }
         else error = false
 
-        await authHandlers.login(email, password)
+        try {
+            await authHandlers.login(email, password)
+            $authStatus = true
+            goto("/")
+        }
+        catch(error) {
+            console.log(error)
+        }
     }
 </script>
 

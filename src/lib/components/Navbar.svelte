@@ -1,5 +1,7 @@
 <script>
     import Icon from '@iconify/svelte';
+    import { authStatus, authHandlers } from "../../stores/auth"
+    import { auth } from "$lib/firebase/firebase";
 
     let menuOpen = false;
 
@@ -20,6 +22,18 @@
             document.body.classList.add("noScroll")
         }
     }
+
+    const handleLogout = async () => {
+        menuOpen = false
+        try {
+            await authHandlers.logout()
+            $authStatus = false
+        }
+        catch(error) {
+            console.log(error)
+        }
+
+    }
 </script>
 
 <div class="w-screen fixed bg-[#041d22] h-[90px] z-40 flex justify-center">
@@ -31,7 +45,11 @@
             <a href="/" on:click={() => handleClose()}><li class="px-4 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Home</li></a>
             <a href="stats" on:click={() => handleClose()}><li class="px-4 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Stats</li></a>
             <a href="history" on:click={() => handleClose()}><li class="px-4 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">History</li></a>
-            <a href="auth" on:click={() => handleClose()}><li class="pl-4 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Login</li></a>
+            {#if $authStatus}
+                <button on:click={() => handleLogout()}><li class="pl-4 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Logout</li></button>
+            {:else}
+                <a href="auth" on:click={() => handleClose()}><li class="pl-4 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Login</li></a>
+            {/if}
         </ul>
     
         <!-- Hamburger menu -->
@@ -56,8 +74,16 @@
         <a href="history" on:click={() => handleClose()}>
             <li class="p-5 border-b border-gray-600 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">History</li>
         </a>
-        <a href="auth" on:click={() => handleClose()}>
-            <li class="p-5 border-b border-gray-600 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Login</li>
-        </a>
+
+        {#if $authStatus}
+            <button on:click={() => handleLogout()}>
+                <li class="p-5 border-b border-gray-600 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Logout</li>
+            </button>
+        {:else}
+            <a href="auth" on:click={() => handleClose()}>
+                <li class="p-5 border-b border-gray-600 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Login</li>
+            </a>
+        {/if}
+
     </ul>
 </div>
