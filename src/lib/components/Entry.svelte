@@ -1,15 +1,16 @@
 <script>
-    import { authStatus, userInstance } from "../../stores/auth"
-    import { auth, db } from "$lib/firebase/firebase";
+    import { userInstance } from "../../stores/auth"
+    import { db } from "$lib/firebase/firebase";
     import { doc, getDoc, setDoc } from "firebase/firestore";
 
     let selection = "expense"
     let currency = "usd"
     let category = "transportation"
     let type = "paycheck"
-
     let amount = ""
     let desc = ""
+    let incomeAmount = ""
+    let incomeDesc = ""
 
     const handleExpense = async () => {
         let expenseData = {
@@ -35,7 +36,7 @@
         catch(error) {
             console.log(error)
         }
-        
+
         amount = ""
         desc = ""
         selection = "expense"
@@ -44,7 +45,32 @@
     }
 
     const handleIncome = async () => {
-        console.log("Handle income")
+        let incomeData = {
+            type: type,
+            amount: incomeAmount,
+            description: incomeDesc
+        }
+
+        try {
+            const userRef = doc(db, "users", $userInstance?.user?.uid)
+            const docSnap = await getDoc(userRef)
+            const userData = docSnap.data()
+            let income = userData?.income || []
+            await setDoc(
+                userRef,
+                {
+                    income: [...income, incomeData]
+                },
+                { merge: true }
+            )
+        }
+        catch(error) {
+            console.log(error)
+        }
+
+        type = "paycheck"
+        incomeAmount = ""
+        incomeDesc = ""
     }
     // Currency conversion API
     // Source of truth: https://github.com/fawazahmed0/exchange-api?tab=readme-ov-file
@@ -143,10 +169,17 @@
                 </div>
             </div>
 
+            <h1 class="pb-2 pt-2 font-semibold text-xl">Description</h1>
+            <div class="w-full gap-x-1 flex justify-center items-center h-[75px] ">
+                <div class="w-full font-semibold text-xl h-full bg-white flex justify-center items-center">
+                    <input bind:value={incomeDesc} class="w-full p-4" type="text" placeholder="Groceries..." />
+                </div>
+            </div>
+
             <h1 class="pb-2 pt-2 font-semibold text-xl">Amount</h1>
             <div class="w-full gap-x-1 flex justify-center items-center h-[75px] ">
                 <div class="w-full font-semibold text-xl h-full bg-white flex justify-center items-center">
-                    <input class="w-full p-4" type="text" placeholder={`${currency === 'usd' ? '$23.00...' : '¥2300...'}`} />
+                    <input bind:value={incomeAmount} class="w-full p-4" type="text" placeholder={`${currency === 'usd' ? '$23.00...' : '¥2300...'}`} />
                 </div>
             </div>
             <button on:click={handleIncome} class="w-full mt-[20px] font-semibold text-xl p-[14px] bg-white flex justify-center items-center">

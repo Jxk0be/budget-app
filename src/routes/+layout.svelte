@@ -16,7 +16,7 @@
                 let userData = {
                     email: user.email,
                     expenses: [],
-                    incomes: []
+                    income: []
                 }
 
                 if (!docSnap.exists()) {
