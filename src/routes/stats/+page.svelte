@@ -5,7 +5,8 @@
     import { doc, getDoc } from "firebase/firestore";
     import { goto } from "$app/navigation";
     import Chart from 'chart.js/auto';
-    import { getContext } from 'svelte';
+    import { currencyConverter } from "$lib/api/CurrencyConverter";
+    import { exchangeRate } from "../../stores/currency"
 
     let expenses = []
     let income = []
@@ -21,53 +22,63 @@
                     expenses = userData.expenses
                     income = userData.income
                 }
+
+                if (expenses.length > 0) {
+                    for (let i = 0; i < expenses?.length; ++i) {
+                        expenses[i].amount = Number(expenses[i].amount)
+                        if (expenses[i].currency === "yen" && $exchangeRate === null) {
+                            $exchangeRate = await currencyConverter("jpy", "usd")
+                        }
+                        if (expenses[i].currency === "yen") {
+                            expenses[i].amount = Number((expenses[i].amount * $exchangeRate).toFixed(2))
+                        }
+                    }
+
+                    expenses = expenses.map((exp) => {
+                        return {
+                            category: exp.category,
+                            amount: exp.amount
+                        }
+                    })
+
+                    const tracker = {}
+                    expenses.forEach((exp) => {
+                        if (exp.category in tracker) tracker[exp.category] += exp.amount
+                        else tracker[exp.category] = exp.amount
+                    })
+
+                    const data = {
+                        labels: Object.keys(tracker),
+                        datasets: [{
+                            label: "amount spent",
+                            data: Object.values(tracker),
+                            borderWidth: 1
+                        }]
+                    }
+
+                    let ctx = document.getElementById("pie")
+                    const chart = new Chart(ctx, {
+                        type: 'pie',
+                        data: data,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false
+                        }
+                    });
+                }
             }
             else goto("/auth")
         })
-        let ctx = document.getElementById("pie")
-        const chart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Red', "Blue", "Yellow", "Green", "Purple", "Orange"],
-                datasets: [{
-                    label: "# of votes",
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(55, 199, 132, 0.2)',
-                        'rgba(255, 9, 132, 0.2)',
-                        'rgba(25, 199, 12, 0.2)',
-                        'rgba(15, 29, 12, 0.2)',
-                        'rgba(105, 129, 12, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(55, 199, 132, 1)',
-                        'rgba(255, 9, 132, 1)',
-                        'rgba(25, 199, 12, 1)',
-                        'rgba(15, 29, 12, 1)',
-                        'rgba(105, 129, 12, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {}
-        });
+
 
         return () => listen()
     })
-
-    $: console.log(expenses, income)
-    // Currency conversion API
-    // Source of truth: https://github.com/fawazahmed0/exchange-api?tab=readme-ov-file
-    // Example: https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json
-        // returns obj of currency objects and what $1 usd is worth in their currency
-        // example: $1 usd is 147.84... in "jpy"
-        // res = res.json()
-        // res.usd <== that's the object with all currencies
-        // res.usd.jpy <=== would be yen conversion
 </script>
 
-<div class="w-full h-screen pt-[90px] flex justify-center">
-    <div class="w-full"><canvas id="pie"></canvas></div>    
+<div class="w-full h-screen pt-[90px] flex justify-center items-center flex-col">
+    {#if expenses.length === 0}
+        <h1 class="font-semibold text-md text-red-500">**Add entries to see a breakdown**</h1>
+    {/if}
+    <h1 class="font-bold text-3xl">Breakdown of Categories</h1>
+    <div class="w-full h-[40vh]"><canvas id="pie"></canvas></div>    
 </div>
