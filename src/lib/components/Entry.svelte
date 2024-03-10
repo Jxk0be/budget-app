@@ -11,8 +11,43 @@
     let desc = ""
     let incomeAmount = ""
     let incomeDesc = ""
+    let invalidFormatError = false
+    let invalidDescLengthError = false
+
+    // We want to make sure that income is always in USD
+    $: if (selection === "income") {
+        currency = "usd"
+    }
+
+    function isValidUSD(amount) {
+        // Regular expression to match the format <digits> or <digits>.<2 digits max>
+        var regex = /^\d+(\.\d{1,2})?$/;
+        return regex.test(amount);
+    }
+
+    function isValidYen(amount) {
+        // Regular expression to match the format <digits> without ¥ symbol
+        var regex = /^\d+$/;
+        return regex.test(amount);
+    }
 
     const handleExpense = async () => {
+        if (!amount || !desc || (currency === "usd" && !isValidUSD(amount)) || (currency === "yen" && !isValidYen(amount))) {
+            invalidFormatError = true
+            invalidDescLengthError = false
+            return
+        }
+        else if (desc.length > 250) {
+            invalidDescLengthError = true
+            invalidFormatError = false
+            return
+        }
+        else {
+            invalidFormatError = false
+            invalidDescLengthError = false
+        }
+
+
         let expenseData = {
             currency: currency,
             category: category,
@@ -45,6 +80,21 @@
     }
 
     const handleIncome = async () => {
+        if (!incomeAmount|| !incomeDesc || (currency === "usd" && !isValidUSD(incomeAmount))) {
+            invalidFormatError = true
+            invalidDescLengthError = false
+            return
+        }
+        else if (incomeDesc.length > 250) {
+            invalidDescLengthError = true
+            invalidFormatError = false
+            return
+        }
+        else {
+            invalidDescLengthError = false
+            invalidFormatError = false
+        }
+
         let incomeData = {
             type: type,
             amount: incomeAmount,
@@ -72,18 +122,16 @@
         incomeAmount = ""
         incomeDesc = ""
     }
-    // Currency conversion API
-    // Source of truth: https://github.com/fawazahmed0/exchange-api?tab=readme-ov-file
-    // Example: https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json
-        // returns obj of currency objects and what $1 usd is worth in their currency
-        // example: $1 usd is 147.84... in "jpy"
-        // res = res.json()
-        // res.usd <== that's the object with all currencies
-        // res.usd.jpy <=== would be yen conversion
 </script>
 
 <div class="w-full md:h-[700px] mt-[-30px] md:mt-[70px] h-full flex justify-center flex-col items-center">
     <h1 class="md:text-[35px] whitespace-nowrap text-[30px] font-bold">Let's Start Budgeting</h1>
+    {#if invalidFormatError}
+        <p class="text-white bg-red-500 p-3 rounded-md">Invalid format, please try again</p>
+    {/if}
+    {#if invalidDescLengthError}
+        <p class="text-white bg-red-500 p-3 rounded-md">Description must not exceed 250 characters</p>
+    {/if}
     <form class="flex z-0 flex-col rounded-xl pb-5 md:pt-0 drop-shadow-xl md:min-w-[500px] mt-[30px] gap-[8px] h-auto max-w-[700px] w-full items-center">
         <div class="w-full whitespace-nowrap flex justify-center font-semibold text-[20px] items-center gap-x-[60px] md:gap-x-[200px]">
             <button on:click={() => selection = "expense"} class={`${selection === 'expense' ? 'underline text-blue-700' : 'hover:text-blue-700'} m-5`}>Add Expense</button>
