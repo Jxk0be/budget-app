@@ -100,7 +100,7 @@
             </button>
 
             {#if conversionResult}
-                <h1 class="bottom-[-20px] z-0 absolute text-3xl md:pt-[90px] font-bold">{type === "yen" ? `$${conversionResult}` : `¥${conversionResult}`}</h1>
+                <h1 class="md:bottom-[-20px] bottom-0 z-0 absolute text-3xl md:pt-[90px] font-bold">{type === "yen" ? `$${conversionResult}` : `¥${conversionResult}`}</h1>
             {/if}
         </div>
     </form>   
