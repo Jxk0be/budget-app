@@ -53,6 +53,7 @@
             <a href="/" on:click={() => handleClose()}><li class="px-4 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Home</li></a>
             <a href="stats" on:click={() => handleClose()}><li class="px-4 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Stats</li></a>
             <a href="history" on:click={() => handleClose()}><li class="px-4 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">History</li></a>
+            <a href="converter" on:click={() => handleClose()}><li class="px-4 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Converter</li></a>
             {#if $authStatus}
                 <button on:click={() => handleLogout()}><li class="pl-4 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Logout</li></button>
             {:else}
@@ -82,7 +83,9 @@
         <a href="history" on:click={() => handleClose()}>
             <li class="p-5 border-b border-gray-600 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">History</li>
         </a>
-
+        <a href="converter" on:click={() => handleClose()}>
+            <li class="p-5 border-b border-gray-600 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Converter</li>
+        </a>
         {#if $authStatus}
             <button on:click={() => handleLogout()} class="p-5 w-full text-left uppercase border-b border-gray-600 duration-150 ease-in-out transition-all hover:text-[#38c5fd]">Logout</button>
         {:else}
