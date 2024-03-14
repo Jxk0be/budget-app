@@ -26,11 +26,13 @@
                 if (expenses.length > 0) {
                     for (let i = 0; i < expenses?.length; ++i) {
                         expenses[i].amount = Number(expenses[i].amount)
-                        if (expenses[i].currency === "yen" && $exchangeRate === null) {
-                            $exchangeRate = await currencyConverter("jpy", "usd")
+                        if (expenses[i].currency === "yen" && $exchangeRate.amount === null) {
+                            $exchangeRate.amount = await currencyConverter("jpy", "usd")
+                            $exchangeRate.type = "jpy"
+                            $exchangeRate.route = "stats"
                         }
                         if (expenses[i].currency === "yen") {
-                            expenses[i].amount = Number((expenses[i].amount * $exchangeRate).toFixed(2))
+                            expenses[i].amount = Number((expenses[i].amount * $exchangeRate.amount).toFixed(2))
                         }
                     }
 
@@ -75,10 +77,10 @@
     })
 </script>
 
-<div class="w-full h-screen pt-[90px] flex justify-center items-center flex-col">
+<div class="w-full h-screen pt-[90px] md:pt-0 flex justify-center items-center flex-col">
     {#if expenses.length === 0}
         <h1 class="font-semibold text-md text-red-500">**Add entries to see a breakdown**</h1>
     {/if}
-    <h1 class="font-bold text-3xl">Breakdown of Categories</h1>
+    <h1 class="font-bold text-3xl whitespace-nowrap">Breakdown of Categories</h1>
     <div class="w-full h-[40vh]"><canvas id="pie"></canvas></div>    
 </div>

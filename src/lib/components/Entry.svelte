@@ -47,7 +47,6 @@
             invalidDescLengthError = false
         }
 
-
         let expenseData = {
             currency: currency,
             category: category,
